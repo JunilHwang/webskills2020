@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<div id="app"></div>
+<script>
+
+  const app = document.querySelector('#app')
+
+  const render = items => {
+    console.log(items)
+    app.innerHTML = `
+      <h2>상품 목록</h2>
+      ${items.map(item => `
+        <article>
+          <h3><a href="${item.link}">${item.title}</a></h3>
+          <ul>
+            <li>브랜드 : ${item.mallName}</li>
+            <li><img src="${item.image}" alt="${item.title}" width="200"></li>
+            <li>${item.lprice}원</li>
+          </ul>
+        </article>
+      `).join('\n')}
+    `
+  }
+
+  fetch('./store.json')
+    .then(res => res.json())
+    .then(json => render(json.items));
+
+</script>
+</body>
+</html>
