@@ -1,21 +1,3 @@
-<?php
-  session_start();
-  $method = strtolower($_SERVER["REQUEST_METHOD"]);
-  if ($method === 'post') {
-      header("Content-Type: text/html; charset=UTF-8");
-      $captcha_string = $_SESSION['captcha_string'];
-      if ($_POST['captcha'] !== $captcha_string) {
-        echo "
-          <script>
-            alert('자동입력 방지 문자가 일치하지 않습니다.');
-            history.back();
-          </script>
-        ";
-      }
-      echo json_encode($_POST);
-      exit;
-  }
-?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -119,9 +101,6 @@
           </label>
           <span class="captcha">
             <img src="./captcha.php" alt="captcha" id="captcha"/>
-            <button type="button" onclick="document.getElementById('captcha').src = './captcha.php?nocache=' + Date.now()">
-              새로고침
-            </button>
           </span>
           <input type="text" name="captcha" id="captchaInput" size="10">
         </li>
