@@ -6,6 +6,229 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul, li {
+      list-style: none;
+    }
+
+    @keyframes slide1 {
+      100%, 0%, 12% {margin-left:0;}
+      25%, 37% {margin-left:-100%;}
+      50%,62% {margin-left:-200%;}
+      75%, 87% {margin-left:-300%;}
+    }
+    @keyframes slide2 {
+      100%, 0%, 12% {margin-left:-100%;}
+      25%, 37% {margin-left:-200%;}
+      50%, 62% {margin-left:-300%;}
+      75%, 87% {margin-left:0;}
+    }
+    @keyframes slide3 {
+      100%, 0%, 12% {margin-left:-200%;}
+      25%, 37% {margin-left:-300%;}
+      50%, 62% {margin-left:0;}
+      75%, 87% {margin-left:-100%;}
+    }
+    @keyframes slide4 {
+      100%, 0%, 12% {margin-left:-300%;}
+      25%, 37% {margin-left:0;}
+      50%, 62% {margin-left:-100%;}
+      75%, 87% {margin-left:-200%;}
+    }
+    @keyframes pos1 {
+      100%, 0%, 12% {width:40px;background:#09F;}
+      25%, 37% {width:20px;background:#fff;}
+      50%,62% {width:20px;background:#fff;}
+      75%, 87% {width:20px;background:#fff;}
+    }
+    @keyframes pos2 {
+      100%, 0%, 12% {width:20px;background:#fff;}
+      25%, 37% {width:40px;background:#09F;}
+      50%,62% {width:20px;background:#fff;}
+      75%, 87% {width:20px;background:#fff;}
+    }
+    @keyframes pos3 {
+      100%, 0%, 12% {width:20px;background:#fff;}
+      25%, 37% {width:20px;background:#fff;}
+      50%,62% {width:40px;background:#09F;}
+      75%, 87% {width:20px;background:#fff;}
+    }
+    @keyframes pos4 {
+      100%, 0%, 12% {width:20px;background:#fff;}
+      25%, 37% {width:20px;background:#fff;}
+      50%,62% {width:20px;background:#fff;}
+      75%, 87% {width:40px;background:#09F;}
+    }
+    @keyframes arrow1 {
+      100%, 0%, 24% {z-index:40;}
+      25%, 49% {z-index:0;}
+      50%, 74% {z-index:0;}
+      75%, 99% {z-index:0;}
+    }
+    @keyframes arrow2 {
+      100%, 0%, 24% {z-index:0;}
+      25%, 49% {z-index:40;}
+      50%, 74% {z-index:0;}
+      75%, 99% {z-index:0;}
+    }
+    @keyframes arrow3 {
+      100%, 0%, 24% {z-index:0;}
+      25%, 49% {z-index:0;}
+      50%, 74% {z-index:40;}
+      75%, 99% {z-index:0;}
+    }
+    @keyframes arrow4 {
+      100%, 0%, 24% {z-index:0;}
+      25%, 49% {z-index:0;}
+      50%, 74% {z-index:0;}
+      75%, 99% {z-index:40;}
+    }
+
+    .slide {
+      height: 700px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide ul {
+      height: 100%;
+      width: 400%;
+      display: flex;
+    }
+
+    .slide li {
+      height: 100%;
+      width: 25%;
+    }
+
+    .slide li:nth-child(1) {
+      background-color: #FFA;
+    }
+
+    .slide li:nth-child(2) {
+      background-color: #AFA;
+    }
+
+    .slide li:nth-child(3) {
+      background-color: #FAA;
+    }
+
+    .slide li:nth-child(4) {
+      background-color: #AAF;
+    }
+
+    .slide .arrow {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50px;
+      top: calc(50% - 25px);
+      background: #fff;
+      border: 2px solid #ddd;
+      z-index: 20;
+      cursor: pointer;
+    }
+
+    .slide .arrow:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    .slide .arrow.prev {
+      left: calc(50% - 600px + 30px);
+    }
+
+    .slide .arrow.next {
+      right: calc(50% - 600px + 30px);
+    }
+
+    .slide .arrow label {
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      cursor: pointer;
+      font-size: 0;
+    }
+
+    .slide .pos {
+      position: absolute;
+      bottom: 30px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 20;
+      align-items: center;
+    }
+
+    .slide .pos label {
+      margin: 0 5px;
+      cursor: pointer;
+    }
+
+    .slide .pos label:not(.stop) {
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 20px;
+    }
+
+    .slide .pos{position:absolute;bottom:30px;left:0;right:0;display:flex;justify-content:center;z-index:20;align-items:center;}
+    .slide .pos label{margin:0 5px;cursor:pointer;}
+
+    #pos1:checked ~ .slide ul {animation:slide1 8s infinite;}
+    #pos2:checked ~ .slide ul {animation:slide2 8s infinite;}
+    #pos3:checked ~ .slide ul {animation:slide3 8s infinite;}
+    #pos4:checked ~ .slide ul {animation:slide4 8s infinite;}
+
+    #pos1:checked ~ .slide .pos label:nth-child(1){animation:pos1 8s infinite;}
+    #pos1:checked ~ .slide .pos label:nth-child(2){animation:pos2 8s infinite;}
+    #pos1:checked ~ .slide .pos label:nth-child(3){animation:pos3 8s infinite;}
+    #pos1:checked ~ .slide .pos label:nth-child(4){animation:pos4 8s infinite;}
+    #pos2:checked ~ .slide .pos label:nth-child(1){animation:pos4 8s infinite;}
+    #pos2:checked ~ .slide .pos label:nth-child(2){animation:pos1 8s infinite;}
+    #pos2:checked ~ .slide .pos label:nth-child(3){animation:pos2 8s infinite;}
+    #pos2:checked ~ .slide .pos label:nth-child(4){animation:pos3 8s infinite;}
+    #pos3:checked ~ .slide .pos label:nth-child(1){animation:pos3 8s infinite;}
+    #pos3:checked ~ .slide .pos label:nth-child(2){animation:pos4 8s infinite;}
+    #pos3:checked ~ .slide .pos label:nth-child(3){animation:pos1 8s infinite;}
+    #pos3:checked ~ .slide .pos label:nth-child(4){animation:pos2 8s infinite;}
+    #pos4:checked ~ .slide .pos label:nth-child(1){animation:pos2 8s infinite;}
+    #pos4:checked ~ .slide .pos label:nth-child(2){animation:pos3 8s infinite;}
+    #pos4:checked ~ .slide .pos label:nth-child(3){animation:pos4 8s infinite;}
+    #pos4:checked ~ .slide .pos label:nth-child(4){animation:pos1 8s infinite;}
+
+    #pos1:checked ~ .slide .arrow label:nth-child(1){animation:arrow1 8s infinite;}
+    #pos1:checked ~ .slide .arrow label:nth-child(2){animation:arrow2 8s infinite;}
+    #pos1:checked ~ .slide .arrow label:nth-child(3){animation:arrow3 8s infinite;}
+    #pos1:checked ~ .slide .arrow label:nth-child(4){animation:arrow4 8s infinite;}
+    #pos2:checked ~ .slide .arrow label:nth-child(1){animation:arrow4 8s infinite;}
+    #pos2:checked ~ .slide .arrow label:nth-child(2){animation:arrow1 8s infinite;}
+    #pos2:checked ~ .slide .arrow label:nth-child(3){animation:arrow2 8s infinite;}
+    #pos2:checked ~ .slide .arrow label:nth-child(4){animation:arrow3 8s infinite;}
+    #pos3:checked ~ .slide .arrow label:nth-child(1){animation:arrow3 8s infinite;}
+    #pos3:checked ~ .slide .arrow label:nth-child(2){animation:arrow4 8s infinite;}
+    #pos3:checked ~ .slide .arrow label:nth-child(3){animation:arrow1 8s infinite;}
+    #pos3:checked ~ .slide .arrow label:nth-child(4){animation:arrow2 8s infinite;}
+    #pos4:checked ~ .slide .arrow label:nth-child(1){animation:arrow2 8s infinite;}
+    #pos4:checked ~ .slide .arrow label:nth-child(2){animation:arrow3 8s infinite;}
+    #pos4:checked ~ .slide .arrow label:nth-child(3){animation:arrow4 8s infinite;}
+    #pos4:checked ~ .slide .arrow label:nth-child(4){animation:arrow1 8s infinite;}
+  </style>
 </head>
 <body>
   <input type="radio" name="pos" id="pos1" checked>
