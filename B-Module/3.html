@@ -14,6 +14,7 @@
 
     #app {
       width: calc(240 * 4px);
+      padding: 20px;
     }
 
     article {
@@ -41,13 +42,20 @@
     #cart.ui-state-highlight {
       background: #fffaaa;
     }
+
+    .searchFrm {
+      width: 300px;
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px;
+    }
   </style>
 </head>
 <body>
-<form action="" onsubmit="search">
-  <fieldset>
+<form action="">
+  <fieldset class="searchFrm">
     <legend>검색</legend>
-    <input type="text" size="100" />
+    <input name="searchKey" type="text" size="20" />
     <button type="submit">검색</button>
   </fieldset>
 </form>
@@ -63,11 +71,13 @@
   const initData = () => {
     fetch('./store.json')
       .then(res => res.json())
-      .then(render);
+      .then(({ items }) => {
+        allItems.push(...items);
+        render(items)
+      });
   }
 
-  const render = ({ items }) => {
-    allItems.push(...items);
+  const render = (items) => {
     $app.html(`
       <h2>상품 목록</h2>
       ${items.map(({ link, title, mallName, image, lprice }, idx) => `
@@ -133,11 +143,34 @@
     });
   }
 
+  function getCho(str) {
+    const cho = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+    const result = [];
+    for (const i in str) {
+      const char = str[i];
+      const index = ~~((char.charCodeAt() - 44032) / 588)
+      result.push(cho[index] || char);
+    }
+    return result.join('');
+  }
+
+
+  const search = e => {
+    e.preventDefault();
+    const key = e.target.searchKey.value
+    const choKey = getCho(key);
+    const isChoKey = key === choKey
+    render(allItems.filter(v => {
+      return isChoKey ? getCho(v.title).includes(choKey) : v.title.includes(key)
+    }) || [])
+  }
+
 
 
   $(document)
     .on('ready', initData)
     .on('click', '.removeCart', removeCart)
+    .on('submit', 'form', search)
 
 
 </script>
