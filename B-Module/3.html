@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <style>
+    * { margin:0; padding: 0;}
+    ul, li { list-style: none}
+
+    #app {
+      width: calc(240 * 4px);
+    }
+
+    article {
+      display: inline-block;
+      vertical-align: top;
+      width: 200px;
+      margin: 15px;
+      position: relative;
+      z-index: 10;
+      background: #fff;
+    }
+
+    #cart{
+      position: fixed;
+      right: 10px;
+      top: 10px;
+      width: 200px;
+      min-height: 200px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    #cart.ui-state-highlight {
+      background: #fffaaa;
+    }
+  </style>
+</head>
+<body>
+<form action="" onsubmit="search">
+  <fieldset>
+    <legend>검색</legend>
+    <input type="text" size="100" />
+    <button type="submit">검색</button>
+  </fieldset>
+</form>
+<div id="app"></div>
+<div id="cart"></div>
+<script>
+
+  const $app = $('#app')
+  const $cart = $('#cart')
+  const cartItems = [];
+  const allItems = [];
+
+  const initData = () => {
+    fetch('./store.json')
+      .then(res => res.json())
+      .then(render);
+  }
+
+  const render = ({ items }) => {
+    allItems.push(...items);
+    $app.html(`
+      <h2>상품 목록</h2>
+      ${items.map(({ link, title, mallName, image, lprice }, idx) => `
+        <article data-idx="${idx}">
+          <h3><a href="${link}">${title}</a></h3>
+          <ul>
+            <li>브랜드 : ${mallName}</li>
+            <li><img src="${image}" alt="${title}" width="200"></li>
+            <li>${lprice}원</li>
+          </ul>
+        </article>
+      `).join('\n')}
+    `);
+
+    cartApp();
+  }
+
+  const renderCart = () => {
+    $cart.html(cartItems.map(({ mallName, title, lprice }, idx) => `
+          <p>
+            [${mallName}] ${title} (${lprice}원)
+            <a href="#" data-idx="${idx}" class="removeCart">[삭제]</a>
+          </p>
+        `).join(''))
+  }
+
+  const removeCart = e => {
+    const $item = e.target;
+    cartItems.splice(e.target.dataset.idx, 1);
+    renderCart();
+  }
+
+  const cartApp = () => {
+
+    $('article', $app).draggable({
+      cancel: "a", // a태그 클릭시 캔슬
+      revert: "invalid", // 드롭을 하지 않으면 원래 위치로 되돌아갑니다
+      containment: "document",
+      helper: "clone", // 드래그 할 때 복사
+      cursor: "move"
+    });
+
+    // 장바구니에 상품을 드롭할 수 있음
+    $cart.droppable({
+      accept: "#app article", // 여기에 해당하는 것들만 드롭할 수 있
+      classes: {
+        "ui-droppable-active": "ui-state-highlight"
+      },
+      drop: function( event, ui ) {
+        const idx = ui.draggable[0].dataset.idx;
+        const item = allItems[idx];
+        if (cartItems.includes(item)) {
+          alert('이미 장바구니에 있는 상품입니다.')
+          return;
+        }
+        cartItems.push(item)
+
+        renderCart();
+
+        alert('장바구니에 해당 상품이 담겼습니다.')
+
+      }
+    });
+  }
+
+
+
+  $(document)
+    .on('ready', initData)
+    .on('click', '.removeCart', removeCart)
+
+
+</script>
+</body>
+</html>
